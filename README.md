@@ -1,4 +1,6 @@
 # Cox7a1 mediated CIV dimerization impacts skeletal muscle physiology and cardiac injury response  
+DOI: [![DOI](https://zenodo.org/badge/727821521.svg)](https://zenodo.org/doi/10.5281/zenodo.10926745)
+
 ShinyApp: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/MercaderLabAnatomy/PUB_Garcia-Poyatos_et_al_2024_shiny_binder/main?urlpath=shiny/bus-dashboard/)
 
 
