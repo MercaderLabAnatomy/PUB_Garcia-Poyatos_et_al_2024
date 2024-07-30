@@ -33,7 +33,7 @@ google-auth-oauthlib==0.4.6
 google-pasta==0.2.0
 grpcio==1.47.0
 h5py==3.7.0
-idna==3.3
+idna==3.7
 image-classifiers==1.0.0
 imageio==2.20.0
 ipykernel==6.15.1
