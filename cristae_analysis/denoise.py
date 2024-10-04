@@ -2,6 +2,8 @@ import os
 import cv2
 import numpy as np
 from tk_r_em import load_network
+import tkinter as tk
+from tkinter import filedialog
 
 import tensorflow as tf
 tf.config.run_functions_eagerly(True)
@@ -30,7 +32,7 @@ def fcn_inference(x, net_name):
 
 def process_tif_folder(input_folder, output_folder):
     """
-    Process a folder containing TIF files, perform inference, and save the output as 16-bit TIF files.
+    Process a folder containing TIF files, perform inference, and save the output as 8-bit grayscale TIF files.
     
     Args:
         input_folder (str): Path to the folder containing input TIF files.
@@ -43,18 +45,29 @@ def process_tif_folder(input_folder, output_folder):
     tif_files = [f for f in os.listdir(input_folder) if f.endswith('.tif')]
     
     for tif_file in tif_files:
-
         input_path = os.path.join(input_folder, tif_file)
         input_image = cv2.imread(input_path, cv2.IMREAD_ANYDEPTH)
         net_name = 'sfr_lrtem' 
         output_image = fcn_inference(input_image, net_name)
-        output_image = output_image.astype(np.uint16)
+        
+        # Normalize the output image to [0, 255] range
+        output_image = ((output_image - output_image.min()) / (output_image.max() - output_image.min()) * 255).astype(np.uint8)
+        
         output_path = os.path.join(output_folder, tif_file)
-        cv2.imwrite(output_path, output_image)
+        cv2.imwrite(output_path, output_image, [cv2.IMWRITE_TIFF_COMPRESSION, 1])
 
 if __name__ == '__main__':
-    input_folder = input("Enter the path to the folder containing TIF files to be denoised: ")
-    output_folder = os.path.join(input_folder, "denoised")
+    # Create a root window and hide it
+    root = tk.Tk()
+    root.withdraw()
+
+    # Open a folder selection dialog
+    input_folder = filedialog.askdirectory(title="Select the folder containing TIF files to be denoised")
     
-    process_tif_folder(input_folder, output_folder)
-    print('Processing complete.')
+    if input_folder:  # Check if a folder was selected
+        output_folder = os.path.join(input_folder, "denoised")
+        
+        process_tif_folder(input_folder, output_folder)
+        print('Processing complete.')
+    else:
+        print('No folder selected. Exiting.')
